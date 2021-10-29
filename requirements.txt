@@ -1,0 +1,7 @@
+librosa
+numba
+numpy
+torch
+torchaudio
+nnAudio
+scikit-learn
