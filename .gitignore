@@ -1,4 +1,5 @@
 # Emacs temporary files
+.vscode
 *~
 
 # Byte-compiled / optimized / DLL files

@@ -21,7 +21,8 @@ setup(
     install_requires=[
         "librosa",
         "numpy",
-        "torch>=1.10"
+        "torch>=1.10",
+        "nnAudio"
     ],
     extras_require={
         "test": [
