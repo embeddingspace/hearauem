@@ -12,27 +12,16 @@ from torch import Tensor
 import torch.nn as nn
 import torch.nn.functional as F
 
+from hearbaseline.util import frame_audio
+
+from .models.base import AuemBaseModel
+
 # Default hop_size in milliseconds
 TIMESTAMP_HOP_SIZE = 50
 SCENE_HOP_SIZE = 250
 
 # Number of frames to batch process for timestamp embeddings
 BATCH_SIZE = 512
-
-
-class AuemBaseModel(nn.Module):
-    sample_rate = 22050
-    embedding_size = 4096
-    scene_embedding_size = embedding_size
-    timestamp_embedding_size = embedding_size
-    seed = 11
-    epsilon = 1e-6
-
-    def __init__(self):
-        super().__init__()
-
-    def forward(self, x: Tensor):
-        raise NotImplementedError("Must implement as a child class.")
 
 
 def load_model(model_file_path: str = "") -> nn.Module:
@@ -61,7 +50,8 @@ def load_model(model_file_path: str = "") -> nn.Module:
     return model
 
 
-def get_scene_embeddings(audio: Tensor, model: nn.Module) -> Tuple[Tensor, Tensor]:
+def get_scene_embeddings(audio: Tensor, model: nn.Module,
+                         hop_size: float = TIMESTAMP_HOP_SIZE) -> Tuple[Tensor, Tensor]:
     """
     This function returns embeddings at regular intervals centered at timestamps.
     Both the embeddings and the corresponding timestamps (in milliseconds) are returned.
@@ -85,9 +75,9 @@ def get_scene_embeddings(audio: Tensor, model: nn.Module) -> Tuple[Tensor, Tenso
         )
     
     # Make sure the correct model type was passed in
-    if not isinstance(model, RandomProjectionMelEmbedding):
+    if not isinstance(model, AuemBaseModel):
         raise ValueError(
-            f"Model must be an instance of {RandomProjectionMelEmbedding.__name__}"
+            f"Model must be an instance of {AuemBaseModel.__name__}"
         )
 
     # Send the model to the same device that the audio tensor is on.
@@ -99,7 +89,7 @@ def get_scene_embeddings(audio: Tensor, model: nn.Module) -> Tuple[Tensor, Tenso
         audio,
         frame_size=model.n_fft,
         hop_size=hop_size,
-        sample_rate=RandomProjectionMelEmbedding.sample_rate,
+        sample_rate=AuemBaseModel.sample_rate,
     )
     audio_batches, num_frames, frame_size = frames.shape
     frames = frames.flatten(end_dim=1)

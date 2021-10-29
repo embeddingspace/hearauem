@@ -6,3 +6,4 @@ torchaudio
 nnAudio
 scikit-learn
 efficientnet_pytorch
+hearbaseline
