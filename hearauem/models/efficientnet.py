@@ -52,3 +52,7 @@ class MelEfficientNet(AuemBaseModel):
     @property
     def n_fft(self) -> int:
         return self.mel.n_fft
+
+    @property
+    def min_frame_size(self) -> int:
+        return self.mel.n_fft * 8

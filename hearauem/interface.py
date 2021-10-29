@@ -87,7 +87,7 @@ def get_scene_embeddings(audio: Tensor, model: nn.Module,
     # of audio frames that can be batch processed.
     frames, timestamps = frame_audio(
         audio,
-        frame_size=model.n_fft,
+        frame_size=model.min_frame_size,
         hop_size=hop_size,
         sample_rate=AuemBaseModel.sample_rate,
     )

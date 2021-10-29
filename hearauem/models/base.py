@@ -15,3 +15,11 @@ class AuemBaseModel(nn.Module):
 
     def forward(self, x: Tensor):
         raise NotImplementedError("Must implement as a child class.")
+
+    @property
+    def n_fft(self) -> int:
+        raise NotImplementedError()
+
+    @property
+    def min_frame_size(self) -> int:
+        return self.n_fft
