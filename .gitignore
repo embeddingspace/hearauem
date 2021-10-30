@@ -1,3 +1,7 @@
+# hearevel files
+embeddings/
+logs/
+
 # Emacs temporary files
 .vscode
 *~
