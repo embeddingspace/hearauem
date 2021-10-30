@@ -36,22 +36,15 @@ def load_model(model_file_path: str = "") -> nn.Module:
     -------
     model
     """
-    model = AuemBaseModel()
     if model_file_path != "":
-        loaded_model = torch.load(model_file_path)
-        if not isinstance(loaded_model, OrderedDict):
-            raise TypeError(
-                "Loaded model must be a state dict of type OrderedDict."
-                f"Recieved {type(loaded_model)}"
-            )
+        loaded_model = AuemBaseModel.load(model_file_path)
+        return loaded_model
 
-        model.load_state_dict(loaded_model)
-
-    return model
+    return None
 
 
-def get_scene_embeddings(audio: Tensor, model: nn.Module,
-                         hop_size: float = TIMESTAMP_HOP_SIZE) -> Tuple[Tensor, Tensor]:
+def get_timestamp_embeddings(audio: Tensor, model: nn.Module,
+                             hop_size: float = TIMESTAMP_HOP_SIZE) -> Tuple[Tensor, Tensor]:
     """
     This function returns embeddings at regular intervals centered at timestamps.
     Both the embeddings and the corresponding timestamps (in milliseconds) are returned.
@@ -112,7 +105,7 @@ def get_scene_embeddings(audio: Tensor, model: nn.Module,
     return embeddings, timestamps
 
 
-def get_timestamp_embeddings(audio: Tensor, model: nn.Module):
+def get_scene_embeddings(audio: Tensor, model: nn.Module):
     embeddings, _ = get_timestamp_embeddings(audio, model, hop_size=SCENE_HOP_SIZE)
     embeddings = torch.mean(embeddings, dim=1)
     return embeddings
