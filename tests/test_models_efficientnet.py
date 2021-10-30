@@ -29,6 +29,17 @@ def test_saving_and_loading(tmp_path):
     assert isinstance(test_model, torch.nn.Module)
 
 
+def test_loading_from_name(tmp_path):
+    save_path = tmp_path / "model.pth"
+    model = M.MelEfficientNet()
+
+    torch.save(model.state_dict(), save_path)
+
+    test_model = load_model(save_path, "MelEfficientNet")
+    assert test_model is not None
+    assert isinstance(test_model, torch.nn.Module)
+
+
 class TestEmbeddings:
     @pytest.fixture(scope="session")
     def model(self):

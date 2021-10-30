@@ -5,7 +5,7 @@ Much of this borrowed from:
 https://github.com/neuralaudio/hear-baseline/blob/main/hearbaseline/naive.py
 """
 from collections import OrderedDict
-from typing import Tuple
+from typing import Tuple, Optional
 
 import torch
 from torch import Tensor
@@ -14,7 +14,7 @@ import torch.nn.functional as F
 
 from hearbaseline.util import frame_audio
 
-from .models.base import AuemBaseModel
+from .models import AuemBaseModel
 
 # Default hop_size in milliseconds
 TIMESTAMP_HOP_SIZE = 50
@@ -24,7 +24,7 @@ SCENE_HOP_SIZE = 250
 BATCH_SIZE = 512
 
 
-def load_model(model_file_path: str = "") -> nn.Module:
+def load_model(model_file_path: str = "", clsname: Optional[str] = "MelEfficientNet") -> nn.Module:
     """
     Returns a torch.nn.Module that produces embeddings for audio.
 
@@ -37,7 +37,7 @@ def load_model(model_file_path: str = "") -> nn.Module:
     model
     """
     if model_file_path != "":
-        loaded_model = AuemBaseModel.load(model_file_path)
+        loaded_model = AuemBaseModel.load(model_file_path, clsname)
         return loaded_model
 
     return None

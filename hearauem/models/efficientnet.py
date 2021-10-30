@@ -19,9 +19,12 @@ class MelEfficientNet(AuemBaseModel):
     win_length = 400
     hop_length = 160
     n_fft = 2048
-    n_mels = 192
+    n_mels = 128
     fmin = 60
     fmax = 10000.0
+
+    scene_embedding_size = embedding_size
+    timestamp_embedding_size = embedding_size
 
     def __init__(self, drop_connect_rate=0.1,
                  compress_mel: bool = True,

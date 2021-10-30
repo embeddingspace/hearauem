@@ -51,16 +51,27 @@ class AuemBaseModel(nn.Module):
         torch.save(save_dict, save_path)
 
     @staticmethod
-    def load(path: Union[pathlib.Path, str]) -> nn.Module:
+    def load(path: Union[pathlib.Path, str], clsname: Optional[str]) -> nn.Module:
         """Load a model from a saved model file."""
         checkpoint = torch.load(path)
 
-        model_cls = checkpoint["class_name"]
-        model_kwargs = checkpoint.get("init_kwargs", {})
-
-        # Imported here to prevent any messy circular imports
         from .factory import create_model
-        model = create_model(model_cls, **model_kwargs)
-        model.load_state_dict(checkpoint["model_state_dict"])
+
+        if "model_state_dict" in checkpoint and "class_name" in checkpoint:
+            model_cls = checkpoint.get("class_name", clsname)
+            model_kwargs = checkpoint.get("init_kwargs", {})
+
+            model = create_model(model_cls, **model_kwargs)
+            model.load_state_dict(checkpoint["model_state_dict"])
+        
+        else:
+            if clsname is None:
+                logger.error("class_name not found in model, and no clsname provided.\n"
+                             "please provide a classname to load the model.")
+                return None
+            
+            model = create_model(clsname)
+            assert model is not None
+            model.load_state_dict(checkpoint, strict=False)
 
         return model
