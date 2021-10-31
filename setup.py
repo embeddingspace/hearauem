@@ -22,7 +22,9 @@ setup(
         "librosa",
         "numpy",
         "torch>=1.10",
-        "nnAudio"
+        "nnAudio",
+        "speechbrain",
+        "transformers==4.4.0",
     ],
     extras_require={
         "test": [
