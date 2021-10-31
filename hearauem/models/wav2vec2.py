@@ -5,6 +5,7 @@ from torch import functional as F
 from transformers import Wav2Vec2Model, Wav2Vec2Config, Wav2Vec2FeatureExtractor
 
 
+@register_model
 class HuggingFaceWav2Vec2(nn.Module):
     """This lobe enables the integration of HuggingFace
     pretrained wav2vec2.0 models.
